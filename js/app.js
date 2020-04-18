@@ -26,13 +26,11 @@ const temaKDA = () => {
     planes.classList.toggle('panel__boton--ajustes_kda');
 }
 
-
 document.getElementById('switch').addEventListener('click', temaKDA, false);
 
 
 // Service Worker
-/*
 if (navigator.serviceWorker) {
     navigator.serviceWorker.register('/sw.js');
 }
-*/
+
