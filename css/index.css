@@ -33,7 +33,7 @@ header {
     background-color: var(--color-primario);
     opacity: 0.9;
     color: whitesmoke;
-    margin-bottom: 80px;
+    margin-bottom: 70px;
 }
 
 nav {
@@ -43,7 +43,7 @@ nav {
     align-items: center;
     background-color: var(--color-primario);
     opacity: 0.9;
-    margin-bottom: 80px;
+    margin-bottom: 70px;
 }
 
 nav img {
@@ -55,7 +55,7 @@ footer {
     grid-area: footer;
     text-align: center;
     background-color: var(--color-primario);
-    margin-top: 10%;
+    margin-top: 8%;
 }
 
 .panel {
@@ -121,7 +121,7 @@ footer {
     font-weight: bold;
     font-size: x-large;
     background-color: whitesmoke;
-    opacity: 0.9;
+    opacity: 0.9; 
 }
 
 .panel__boton--general:hover, .panel__boton--ajustes:hover, .panel__boton--lugares:hover, .panel__boton--clima:hover, .panel__boton--planes:hover, .nav__boton:hover {

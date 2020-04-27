@@ -1,6 +1,6 @@
-const STATIC_CACHE = 'static-045-2020';
-const DYNAMIC_CACHE = 'dynamic-045-2020';
-const INMUTABLE_CACHE = 'inmutable-045-2020';
+const STATIC_CACHE = 'static-04-2020';
+const DYNAMIC_CACHE = 'dynamic-04-2020';
+const INMUTABLE_CACHE = 'inmutable-04-2020';
 
 const DYNAMIC_CACHE_LIMIT = 100;
 
