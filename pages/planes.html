@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+
+<body>
+    <div class="contenedor contenedor--planes">
+        <header>
+            <a class="tituloPagina" href="../index.html">
+                <h1>HANA</h1>
+            </a>
+        </header>
+
+        <nav class="nav">
+            <a class="nav__boton" href="#">
+                <img src="../icons/web/buscar.svg" alt="img">
+            </a>
+            <a class="nav__boton" href="#">
+                <img src="../icons/web/calendario.svg" alt="img">
+            </a>
+            <a class="nav__boton" href="#">
+                <img src="../icons/web/perfil.svg" alt="img">
+            </a>
+        </nav>
+
+        <div class="banner ">
+            <h1>Planes</h1>
+        </div>
+
+        <!-- Tablon central -->
+        <div class="tablon">
+
+            <!-- Añadir planes -->
+            <div class="tablon__add" id="tablonAdd">
+                <h3>ADD</h3>
+                <input type="text" id="addPlanValue">
+                <button id="add">+</button>
+            </div>
+
+            <!-- Cards con planes -->
+            <div class="tablon__plan" id="tablonDinamico">
+
+            </div>
+
+            <!-- Tablon de mensajes -->
+            <div class="tablon__chat oculto--plan" id="chat">
+                <button class="oculto--plan" id="atras">Atrás</button>
+                <div class="innerMsg" id="innerMsg">
+                    <!-- mensajes generados dinamicamente-->
+                </div>
+                <input type="text" id="addMensaje">
+                <button id="enviar">enviar</button>
+            </div>
+        </div>
+
+
+        <footer class="oculto--mobile">
+            <h5>By JJ 2020</h5>
+            <h6>
+                Iconos diseñados por <a href="https://www.flaticon.es/autores/freepik" title="Freepik"> Freepik</a>
+                from <a href="https://www.flaticon.es/" title="Flaticon"> www.flaticon.es</a>
+            </h6>
+        </footer>
+
+        <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
+        <script src="../js/firestore.js"></script>
+    </div>

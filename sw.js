@@ -1,6 +1,6 @@
-const STATIC_CACHE = 'static-04-2020';
-const DYNAMIC_CACHE = 'dynamic-04-2020';
-const INMUTABLE_CACHE = 'inmutable-04-2020';
+const STATIC_CACHE = 'static-05-2020';
+const DYNAMIC_CACHE = 'dynamic-05-2020';
+const INMUTABLE_CACHE = 'inmutable-05-2020';
 
 const DYNAMIC_CACHE_LIMIT = 100;
 
@@ -24,22 +24,29 @@ const APP_SHELL = [
     'index.html',
     'css/index.css',
     'js/app.js',
-    'icons/ajustes.svg',
-    'icons/buscar.svg',
-    'icons/calendario.svg',
-    'icons/clima.svg',
-    'icons/general.svg',
-    'icons/lugares.svg',
-    'icons/perfil.svg',
-    'icons/planes.svg',
+    'js/firestore.js',
+    'icons/web/ajustes.svg',
+    'icons/web/buscar.svg',
+    'icons/web/calendario.svg',
+    'icons/web/clima.svg',
+    'icons/web/general.svg',
+    'icons/web/lugares.svg',
+    'icons/web/perfil.svg',
+    'icons/web/planes.svg',
+    'icons/favicon.ico',
     'img/kda.jpg',
     'img/plumas.jpg',
     'img/error.jpg',
+    'img/landscape.jpg',
+    'pages/general.html',
+    'pages/planes.html',
     'pages/error.html'
 ];
 
 const APP_SHELL_INMUTABLE = [
-    'https://kit.fontawesome.com/3c16f4957b.js'
+    'https://kit.fontawesome.com/3c16f4957b.js',
+    'https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js',
+    'https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js'
 ];
 
 
