@@ -14,11 +14,11 @@ if (navigator.serviceWorker) {
 let active = document.getElementById('switch');
 let fondo = document.body;
 let titulo = document.getElementsByTagName('h1')[0];
-let general = document.getElementsByTagName('a')[0];
-let ajustes = document.getElementsByTagName('a')[1];
-let lugares = document.getElementsByTagName('a')[2];
-let clima = document.getElementsByTagName('a')[3];
-let planes = document.getElementsByTagName('a')[4];
+let general = document.getElementsByTagName('a')[1];
+let ajustes = document.getElementsByTagName('a')[2];
+let lugares = document.getElementsByTagName('a')[3];
+let clima = document.getElementsByTagName('a')[4];
+let planes = document.getElementsByTagName('a')[5];
 
 const temaKDA = () => {
     active.classList.toggle('active');
@@ -26,9 +26,9 @@ const temaKDA = () => {
     titulo.classList.toggle('kda');
     general.classList.toggle('panel__boton--general_kda');
     ajustes.classList.toggle('panel__boton--ajustes_kda');
-    lugares.classList.toggle('panel__boton--ajustes_kda');
-    clima.classList.toggle('panel__boton--ajustes_kda');
-    planes.classList.toggle('panel__boton--ajustes_kda');
+    lugares.classList.toggle('panel__boton--lugares_kda');
+    clima.classList.toggle('panel__boton--clima_kda');
+    planes.classList.toggle('panel__boton--planes_kda');
 
     // Guardar modo
     if (document.body.classList.contains('fondo--kda')) {
@@ -45,18 +45,18 @@ if (localStorage.getItem('kda-mode') === 'true') {
     titulo.classList.add('kda');
     general.classList.add('panel__boton--general_kda');
     ajustes.classList.add('panel__boton--ajustes_kda');
-    lugares.classList.add('panel__boton--ajustes_kda');
-    clima.classList.add('panel__boton--ajustes_kda');
-    planes.classList.add('panel__boton--ajustes_kda');
+    lugares.classList.add('panel__boton--lugares_kda');
+    clima.classList.add('panel__boton--clima_kda');
+    planes.classList.add('panel__boton--planes_kda');
 } else {
     active.classList.remove('active');
     fondo.classList.remove('fondo--kda');
     titulo.classList.remove('kda');
     general.classList.remove('panel__boton--general_kda');
     ajustes.classList.remove('panel__boton--ajustes_kda');
-    lugares.classList.remove('panel__boton--ajustes_kda');
-    clima.classList.remove('panel__boton--ajustes_kda');
-    planes.classList.remove('panel__boton--ajustes_kda');
+    lugares.classList.remove('panel__boton--lugares_kda');
+    clima.classList.remove('panel__boton--clima_kda');
+    planes.classList.remove('panel__boton--planes_kda');
 }
 
 document.getElementById('switch').addEventListener('click', temaKDA, false);
