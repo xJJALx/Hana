@@ -45,8 +45,6 @@ const APP_SHELL = [
 
 const APP_SHELL_INMUTABLE = [
     'https://kit.fontawesome.com/3c16f4957b.js',
-    'https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js',
-    'https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js'
 ];
 
 

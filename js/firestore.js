@@ -24,6 +24,8 @@ let dbRef = db.collection('Hana-B');
         FUNCIONES
     ------------------- */
 
+// Variable global para de referenciar el usuario logueado
+let currentUser;
 
 // Variable global para de referenciar el plan y poder añadir mensajes ***addMensaje()***
 let planRef;
@@ -37,17 +39,37 @@ const targetPlan = (e) => {
 const isOnline = () => {
     if (!navigator.onLine) {
         alert('Se ha caído la conexión');
-        leerIndexedDBOffline();
+        setTimeout(() => {
+            leerIndexedDBOffline();
+        }, 3000);
+
     } else {
-        alert('Hay conexión');
+        //alert('Hay conexión');
     }
 }
 
-// Reinicia indexedDB para actualizar la informacion
-const gestionIndexedDB = () => {
-    reiniciarIndexedDB();
-    iniciarIndexedDB();
+
+// Detecta el plan elegido y carga sus mensajes
+const target = (e) => {
+    let plan = e.target.id;
+
+    if (plan === 'atras') atras();
+
+    dbRef
+        .get().then(snap => {
+            snap.forEach(planBD => {
+                if (plan === planBD.id) {
+                    showPanel();
+                    cargarMensajes(plan);
+                }
+            });
+        });
 }
+
+const limpiarInputMsg = () => {
+    document.getElementById('addMensaje').value = ""
+}
+
 
 // Crea cards en html con los planes leidos de Firestore
 const creaMensajes = (planes) => {
@@ -92,11 +114,9 @@ const cargarMensajes = (plan) => {
 
 // Añade mensajes al plan elegido
 const addMensaje = () => {
-
     let f = new Date();
     let mensaje = document.getElementById('addMensaje').value;
-    let autor = 'Admin';
-
+    let autor = currentUser;
     let msg = {
         mensaje: mensaje,
         autor: autor,
@@ -104,41 +124,25 @@ const addMensaje = () => {
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
 
+    addMensajeIndexedDB();
+
     dbRef
         .doc(planRef)
         .collection('mensajes')
         .add(msg)
-}
 
-
-// Detecta el plan elegido y carga sus mensajes
-const target = (e) => {
-    let plan = e.target.id;
-
-    if (plan === 'atras') atras();
-
-    dbRef
-        .get().then(snap => {
-            snap.forEach(planBD => {
-                if (plan === planBD.id) {
-                    showPanel();
-                    cargarMensajes(plan);
-                }
-            });
-        });
+    limpiarInputMsg();
 }
 
 
 // Añade planes a la BD Firestore
-const addBDCollection = () => {
+const addDBCollection = () => {
     let nombrePlan = document.getElementById('addPlanValue').value;
 
     dbRef
         .doc(nombrePlan).set({
             plan: nombrePlan
         });
-
-    gestionIndexedDB();
 }
 
 
@@ -164,14 +168,14 @@ const iniciarIndexedDB = () => {
         db.close();
 
         setTimeout(() => {
-            addPlanesIndexedDB();
+            addPlanesIndexedDB(null, null);
         }, 3000);
     }
 }
 
 
 // Añade los planes del tablon a la indexedDB
-const addPlanesIndexedDB = () => {
+const addPlanesIndexedDB = (p, datos) => {
     let request = window.indexedDB.open('HANABD');
     let planes = [];
 
@@ -190,11 +194,27 @@ const addPlanesIndexedDB = () => {
         let store = transaction.objectStore('Planes');
 
         for (let plan of planes) {
-            store.add({ id: plan });
+            if (datos === null) {
+                store.add({ id: plan, datos: datos });
+            } else {
+                if (plan === p) store.put({ id: plan, datos: datos });
+            }
         }
 
         db.close();
     }
+}
+
+
+const addMensajeIndexedDB = () => {
+    dbRef.doc(planRef)
+        .collection('mensajes').orderBy('timestamp').onSnapshot(snap => {
+            let datos;
+            snap.forEach(snapHijo => {
+                datos += `;autor:${snapHijo.data().autor};mensaje:${snapHijo.data().mensaje}`;
+            });
+            addPlanesIndexedDB(planRef, datos);
+        });
 }
 
 
@@ -254,6 +274,120 @@ const leerIndexedDBOffline = () => {
 }
 
 
+// OPCIONAL (No se ha usado, falta mejorarlo) - carga los mensajes del indexedDB si no hay internet
+// Por defecto se cargan del caché dinamico
+const cargarMensajesIndexedDBOffline = (idPlan) => {
+
+    //document.getElementById('tablonOff').classList.remove('oculto--plan');
+
+    //let tablonOff = document.getElementById('tablonOff');
+
+    let request = window.indexedDB.open('HANABD');
+
+    let tablon = document.getElementById('tablonDinamico');
+
+    request.onsuccess = event => {
+
+        let db = event.target.result;
+
+        let transaction = db.transaction(['Planes'], 'readonly');
+
+        let store = transaction.objectStore('Planes');
+
+        let cursor = store.openCursor();
+
+        cursor.onsuccess = event => {
+
+            let datos = event.target.result;
+
+            if (datos) {
+
+                let array = [];
+
+                if (datos.value.id === idPlan) {
+                    array = datos.value.datos.split(/;|:/)
+                    for (let i = 1; i < array.length; i += 2) {
+                        console.log(array[i]);
+                        tablonOff.innerHTML +=
+                            '<div class="bubbleMsg"><p>' + array[i] + ": " + array[i + 1] + '</p></div>';
+                    }
+                }
+                datos.continue();
+            }
+        }
+    }
+}
+
+
+
+/*  -------------------
+         LOGIN
+   ------------------- */
+
+
+const registrar = () => {
+    let email = document.getElementById('id_emailReg').value;
+    let pass = document.getElementById('id_passReg').value;
+    let user = document.getElementById('id_usuario').value;
+
+    firebase.auth().createUserWithEmailAndPassword(email, pass)
+        .then(() => {
+            firebase.auth().currentUser.updateProfile({
+                displayName: user
+            });
+        })
+        .then(() => {
+            verificar();
+        })
+        .catch((error) => {
+            console.log(error.message);
+        });
+}
+
+
+const login = () => {
+    let email = document.getElementById('id_emailLogin').value;
+    let pass = document.getElementById('id_passLogin').value;
+
+    firebase.auth().signInWithEmailAndPassword(email, pass)
+        .then(() => { console.log('Hola'); })
+        .catch((error) => { console.log(error.message); });
+}
+
+const verificar = () => {
+    let user = firebase.auth().currentUser;
+
+    user.sendEmailVerification()
+        .then(() => console.log('Enviando email de verificación'))
+        .catch(() => console.log('Error verificación'));
+
+}
+
+const logout = () => {
+    firebase.auth().signOut();
+}
+
+const observador = () => {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            ifLogin();
+            currentUser = user.displayName;
+            console.log(currentUser);
+
+            /* Eventos que deben funcionar solo si se ha iniciado sesión */
+            document.getElementById('add').addEventListener('click', addDBCollection, false);
+            document.getElementById('enviar').addEventListener('click', addMensaje, false);
+
+        } else {
+            ifNoLogin();
+            console.log('No hay usuario activo')
+
+        }
+    });
+}
+
+
+
 /*  -------------------
          DISPLAYS
     ------------------- */
@@ -262,17 +396,16 @@ let btn = document.getElementsByClassName('tablon__plan');
 
 const showPanel = () => {
     for (let i = 0; i < btn.length; i++) {
-        btn[i].classList.toggle('oculto--plan');
+        btn[i].classList.add('oculto--plan');
     }
 
-    document.getElementById('chat').classList.toggle('oculto--plan');
-    document.getElementById('atras').classList.toggle('oculto--plan');
-    document.getElementById('tablonAdd').classList.toggle('oculto--plan');
+    document.getElementById('chat').classList.remove('oculto--plan');
+    document.getElementById('atras').classList.remove('oculto--plan');
+    document.getElementById('tablonAdd').classList.add('oculto--plan');
 }
 
 
 const atras = () => {
-
     for (let i = 0; i < btn.length; i++) {
         btn[i].classList.remove('oculto--plan');
     }
@@ -282,6 +415,23 @@ const atras = () => {
     document.getElementById('tablonAdd').classList.remove('oculto--plan');
 }
 
+const ifLogin = () => {
+    document.getElementById('tablonAdd').classList.add('tablon__add--visible');
+    document.getElementById('tablonAdd').classList.remove('oculto--tab');
+    document.getElementById('loginRegistro').classList.add('oculto--tab');
+    document.getElementById('addMensaje').classList.remove('oculto--plan');
+    document.getElementById('enviar').classList.remove('oculto--plan');
+}
+
+const ifNoLogin = () => {
+    document.getElementById('tablonAdd').classList.remove('tablon__add--visible');
+    document.getElementById('tablonAdd').classList.add('oculto--tab');
+    document.getElementById('loginRegistro').classList.remove('oculto--tab');
+    document.getElementById('addMensaje').classList.add('oculto--plan');
+    document.getElementById('enviar').classList.add('oculto--plan');
+}
+
+
 
 /*  -------------------
        LISTENERS
@@ -289,15 +439,22 @@ const atras = () => {
 
 window.onload = cargarPlanes();
 window.onload = iniciarIndexedDB();
+window.onload = observador();
 
 window.addEventListener('online', isOnline);
 window.addEventListener('offline', isOnline);
 
+
+document.getElementById('registrar').addEventListener('click', registrar, false);
+document.getElementById('login').addEventListener('click', login, false);
+document.getElementById('Logout').addEventListener('click', logout, false);
+
+
 document.body.addEventListener('click', target, false);
-document.getElementById('add').addEventListener('click', addBDCollection, false);
 document.getElementById('tablonDinamico').addEventListener('click', targetPlan, false);
-document.getElementById('enviar').addEventListener('click', addMensaje, false);
 document.getElementById('atras').addEventListener('click', atras, false);
+
+
 
 
 
