@@ -404,7 +404,7 @@ a.logo {
     border-radius: 25px;
 }
 
-.tablon__chat button#enviar{
+.tablon__chat button#enviar {
     flex-basis: 20%;
     margin: 4% 0;
     padding: 1%;
@@ -412,7 +412,7 @@ a.logo {
     color: white;
 }
 
-.tablon__chat button#atras, button#Logout{
+.tablon__chat button#atras, button#Logout {
     background-color: rgba(219, 80, 138, 0.767);
     color: white;
 }
@@ -508,4 +508,58 @@ a.logo {
 
 .oculto--tab {
     display: none;
+}
+
+@media screen and (max-width: 576px) {
+    .contenedor--planes {
+        grid-template-rows: repeat(10, 1fr);
+        grid-template-areas: "titulo titulo titulo" "banner banner banner" "banner banner banner" "tablon tablon tablon" "tablon tablon tablon" "tablon tablon tablon" "tablon tablon tablon" "tablon tablon tablon" "tablon tablon tablon" "nav nav nav";
+    }
+    .banner {
+        min-height: 100%;
+    }
+    .banner h1 {
+        font-size: 400%;
+    }
+    .tablon {
+        margin: 5%;
+        overflow: scroll;
+        -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.75);
+        box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.75);
+    }
+    /********** Version KDA **********/
+    .tablon--kda {
+        opacity: 0.9;
+        background-color: transparent;
+    }
+    /********************************/
+    .tablon__add {
+        margin: 1%;
+    }
+    .tablon__plan {
+        display: block;
+    }
+    .tablon__plan--card {
+        margin: 2% 5%;
+        border-radius: 15px;
+    }
+    .tablon__chat {
+        position: absolute;
+        z-index: 999;
+        background-color: #735288;
+        top: 10%;
+        right: 0;
+        min-height: 90%;
+    }
+    .tablon__chat button#atras, .tablon__chat button#enviar, .tablon__chat input  {
+        height: 50px;
+    }
+    .tab-contenedor {
+        margin: 2%;
+    }
+    .contenedor--planes nav {
+        margin: 3%;
+        border-radius: 50px;
+    }
 }

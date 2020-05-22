@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planes</title>
+    <script src="https://kit.fontawesome.com/3c16f4957b.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../css/index.css">
     <link rel="shortcut icon" type="image/ico" href="../icons/favicon.ico">
 </head>
@@ -15,6 +16,10 @@
             <a class="logo" href="../index.html">
                 <h1>HANA</h1>
             </a>
+            <button class="switch oculto" id="switch">
+                <span><i class="fas fa-sun"></i></span>
+                <span><i class="fas fa-moon"></i></span>
+            </button>
         </header>
 
         <nav class="nav">
@@ -35,7 +40,7 @@
 
 
         <!-- Tablon central -->
-        <div class="tablon">
+        <div class="tablon" id="tablon">
             <!-- Login - Registro -->
             <div class="tab-contenedor">
                 <div class="tab-frame" id="loginRegistro">
@@ -74,7 +79,6 @@
             </div>
 
             <!-- Añadir planes -->
-
             <div class="tablon__add" id="tablonAdd">
                 <h3>Agregar plan</h3>
                 <input type="text" id="addPlanValue">

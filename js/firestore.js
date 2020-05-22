@@ -439,6 +439,44 @@ const ifNoLogin = () => {
 }
 
 
+/*  -------------------
+         TEMA KDA
+    ------------------- */
+
+let active = document.getElementById('switch');
+let fondo = document.body;
+let titulo = document.getElementsByTagName('h1')[0];
+let tablon = document.getElementById('tablon');
+
+const temaKDA = () => {
+    active.classList.toggle('active');
+    fondo.classList.toggle('fondo--kda');
+    titulo.classList.toggle('kda');
+    tablon.classList.toggle('tablon--kda');
+
+    // Guardar modo
+    if (document.body.classList.contains('fondo--kda')) {
+        localStorage.setItem('kda-mode', 'true');
+    } else {
+        localStorage.setItem('kda-mode', 'false');
+    }
+}
+
+// Obtener modo
+if (localStorage.getItem('kda-mode') === 'true') {
+    active.classList.add('active');
+    fondo.classList.add('fondo--kda');
+    titulo.classList.add('kda');
+    tablon.classList.add('tablon--kda');
+
+} else {
+    active.classList.remove('active');
+    fondo.classList.remove('fondo--kda');
+    titulo.classList.remove('kda');
+    tablon.classList.remove('tablon--kda');
+}
+
+
 
 /*  -------------------
        LISTENERS
@@ -461,7 +499,7 @@ document.body.addEventListener('click', target, false);
 document.getElementById('tablonDinamico').addEventListener('click', targetPlan, false);
 document.getElementById('atras').addEventListener('click', atras, false);
 
-
+document.getElementById('switch').addEventListener('click', temaKDA, false);
 
 
 

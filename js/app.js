@@ -14,11 +14,12 @@ if (navigator.serviceWorker) {
 let active = document.getElementById('switch');
 let fondo = document.body;
 let titulo = document.getElementsByTagName('h1')[0];
-let general = document.getElementsByTagName('a')[1];
-let ajustes = document.getElementsByTagName('a')[2];
-let lugares = document.getElementsByTagName('a')[3];
-let clima = document.getElementsByTagName('a')[4];
-let planes = document.getElementsByTagName('a')[5];
+let general = document.getElementById('general');
+let ajustes = document.getElementById('ajustes');
+let lugares = document.getElementById('lugares');
+let clima = document.getElementById('clima');
+let planes = document.getElementById('planes');
+
 
 const temaKDA = () => {
     active.classList.toggle('active');
