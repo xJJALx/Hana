@@ -124,7 +124,7 @@ const addMensaje = () => {
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
 
-    addMensajeIndexedDB();
+    addMensajeIndexedDB(autor, mensaje);
 
     dbRef
         .doc(planRef)
@@ -205,8 +205,16 @@ const addPlanesIndexedDB = (p, datos) => {
     }
 }
 
+// Añade el mensaje al indexedDB 
+const addMensajeIndexedDB = (autor, mensaje) => {
+    let datos = `autor:${autor};mensaje:${mensaje};`;
 
-const addMensajeIndexedDB = () => {
+    addPlanesIndexedDB(planRef, datos);
+
+}
+
+// Añade todos los mensajes a la indexedDB, requiere de conexion a internet.
+const addMensajeIndexedDB2 = () => {
     dbRef.doc(planRef)
         .collection('mensajes').orderBy('timestamp').onSnapshot(snap => {
             let datos;
@@ -360,7 +368,6 @@ const verificar = () => {
     user.sendEmailVerification()
         .then(() => console.log('Enviando email de verificación'))
         .catch(() => console.log('Error verificación'));
-
 }
 
 const logout = () => {
