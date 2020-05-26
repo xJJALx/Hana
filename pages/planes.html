@@ -84,8 +84,14 @@
                 <input type="text" id="addPlanValue">
                 <button class="boton" id="add">Add</button>
                 <button class="boton" id="Logout">Logout</button>
+
             </div>
 
+            <div class="tablon__usuarios oculto--plan" id="tablonUsuarios">
+                <h4>Marca los usuarios que pueden acceder al plan</h4>
+                <div id="listaUsuarios"></div>
+                <button class="boton" id="checkBoxOK">OK</button>
+            </div>
             <!-- Cards con planes -->
             <div class="tablon__plan" id="tablonDinamico">
 
@@ -94,6 +100,7 @@
             <!-- Tablon de mensajes -->
             <div class="tablon__chat oculto--plan" id="chat">
                 <button class="boton oculto--plan" id="atras">Atrás</button>
+                <div id="chatTitulo"></div>
                 <div class="innerMsg" id="innerMsg">
                     <!-- mensajes generados dinamicamente-->
                 </div>

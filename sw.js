@@ -37,7 +37,7 @@ const APP_SHELL = [
     'img/kda.jpg',
     'img/plumas.jpg',
     'img/error.jpg',
-    'img/landscape.jpg',
+    'img/landscape.png',
     'pages/general.html',
     'pages/planes.html',
     'pages/error.html'

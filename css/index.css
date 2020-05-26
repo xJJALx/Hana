@@ -295,7 +295,7 @@ a.logo {
 
 .banner {
     grid-area: banner;
-    background-image: url('../img/landscape.jpg');
+    background-image: url('../img/landscape.png');
     background-size: cover;
     background-position: center;
     min-height: 300px;
@@ -344,12 +344,29 @@ a.logo {
 .tablon__add input {
     flex-basis: 78%;
     text-align: center;
-    margin: 0 1%;
+    margin: 0 2%;
 }
 
 .tablon__add button {
     flex-basis: 20%;
     text-align: center;
+}
+
+.tablon__usuarios {
+    flex-basis: 100%;
+    margin: 2%;
+    padding: 2%;
+    border-radius: 2px;
+    background-color: rgb(56, 161, 156);
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.tablon__usuarios button.boton {
+    padding: 0;
+    max-width: 40px;
+    color: white;
 }
 
 .tablon__plan {
@@ -389,6 +406,11 @@ a.logo {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+.tablon__chat h2 {
+    text-align: center;
+    color: whitesmoke;
 }
 
 .tablon__chat div {
@@ -436,6 +458,7 @@ a.logo {
 .boton {
     min-width: 100px;
     padding: 2%;
+    margin: 1%;
     border-radius: 8px;
     color: white;
     background-color: hsla(277, 25%, 43%, 0.733);
@@ -550,9 +573,9 @@ a.logo {
         background-color: #735288;
         top: 10%;
         right: 0;
-        min-height: 90%;
+        min-height: 95%;
     }
-    .tablon__chat button#atras, .tablon__chat button#enviar, .tablon__chat input  {
+    .tablon__chat button#atras, .tablon__chat button#enviar, .tablon__chat input {
         height: 50px;
     }
     .tab-contenedor {

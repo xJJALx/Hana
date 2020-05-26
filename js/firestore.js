@@ -72,9 +72,9 @@ const limpiarInputMsg = () => {
 
 
 // Crea cards en html con los planes leidos de Firestore
-const creaMensajes = (planes) => {
+const creaCardPlanes = (planes) => {
     let tablon = document.getElementById('tablonDinamico');
-    document.getElementById('tablonDinamico').innerHTML = ''; // Limpia tablón
+    tablon.innerHTML = ''; // Limpia tablón
     for (let i = 0; i < planes.length; i++) {
         tablon.innerHTML += `
                     <div class="tablon__plan--card ">
@@ -86,25 +86,29 @@ const creaMensajes = (planes) => {
 }
 
 
-// Lee BD Firestore y genera planes dinamicamente
-const cargarPlanes = () => {
+// Lee BD Firestore y genera planes dinamicamente, se ejecuta cuando se inicia sesión y carga los planes a los que está asociada su ID
+const cargarPlanes = (usuarioID) => {
     dbRef
         .onSnapshot(snap => {
-            var planes = [];
+            let planes = [];
             snap.forEach(plan => {
-                planes.push(plan.id);
+                if (plan.id !== 'Usuarios') {
+                    if (plan.data().usuarios.includes(usuarioID)) {
+                        planes.push(plan.id)
+                    }
+                }
             });
-            creaMensajes(planes);
+            creaCardPlanes(planes);
         });
 }
 
-
 // Carga los mensajes dinamicamente del plan elegido
 const cargarMensajes = (plan) => {
+    document.getElementById('chatTitulo').innerHTML = '<h2>' + plan + '</h2>';
     dbRef.doc(plan)
         .collection('mensajes').orderBy('timestamp').onSnapshot(snap => {
             let chat = document.getElementById('innerMsg');
-            document.getElementById('innerMsg').innerHTML = ''; // Limpia mensajes
+            chat.innerHTML = ''; // Limpia mensajes
             snap.forEach(snapHijo => {
                 chat.innerHTML += '<div class="bubbleMsg"><p>' + snapHijo.data().autor + ": " + snapHijo.data().mensaje + '</p></div>';
             });
@@ -135,15 +139,105 @@ const addMensaje = () => {
 }
 
 
+
+
+const addUsuario = (uid, displayName) => {
+    let ID = {
+        usuarioID: uid,
+        nombre: displayName
+    };
+
+    dbRef
+        .doc('Usuarios')
+        .collection('IDs')
+        .add(ID)
+}
+
 // Añade planes a la BD Firestore
-const addDBCollection = () => {
+const addPlanDBCollection = (usuarios) => {
     let nombrePlan = document.getElementById('addPlanValue').value;
+    addPlanesIndexedDB(nombrePlan, null)
 
     dbRef
         .doc(nombrePlan).set({
-            plan: nombrePlan
+            plan: nombrePlan,
+            usuarios: usuarios
         });
 }
+
+const getAllUsersFirestore = (usuarios) => {
+    dbRef
+        .onSnapshot(snap => {
+            snap.forEach(plan => {
+                if (plan.id === 'Usuarios') {
+                    plan.ref.collection('IDs').onSnapshot(snapHijo => {
+                        snapHijo.forEach((document) => {
+                            usuarios.push(document.data().nombre);
+                            usuarios.push(document.data().usuarioID);
+                        });
+                    });
+                }
+            });
+        });
+}
+
+
+const listarUsuarios = () => {
+    let usuarios = [];
+    let tablon = document.getElementById('listaUsuarios');
+
+    document.getElementById('tablonUsuarios').classList.remove('oculto--plan');
+
+    const datos = new Promise((resolve, reject) => {
+        if (usuarios.length == 0) {
+            resolve(getAllUsersFirestore(usuarios));
+        } else {
+            reject(console.log('No hay usuarios'));
+        }
+    });
+
+    setTimeout(() => {
+        for (let i = 0; i < usuarios.length; i += 2) {
+            if (usuarios[i + 1] === currentUserID) {
+                tablon.innerHTML +=
+                    `<label><input type="checkbox" name="userCheckbox" value="${usuarios[i + 1]}"  checked="checked">${usuarios[i]}</label></br>`;
+            } else {
+                tablon.innerHTML +=
+                    `<label><input type="checkbox" name="userCheckbox" value="${usuarios[i + 1]}">${usuarios[i]}</label></br>`;
+            }
+        }
+    }, 400);
+
+    // De esta forma no espera que se añadan los usuarios al array en el resolve()
+    // datos
+    //     .then(() => {
+    //         console.log(usuarios + ' usu' );
+    //         for (let i = 0; i < usuarios.length; i += 2) {
+    //             if (usuarios[i + 1] === currentUserID) {
+    //                 document.getElementById('tablonDinamico').innerHTML +=
+    //                     `<label><input type="checkbox" name="userCheckbox" value="${usuarios[i + 1]}"  checked="checked">${usuarios[i]}</label></br>`;
+    //             } else {
+    //                 document.getElementById('tablonDinamico').innerHTML +=
+    //                     `<label><input type="checkbox" name="userCheckbox" value="${usuarios[i + 1]}">${usuarios[i]}</label></br>`;
+    //             }
+    //         }
+    //     });
+}
+
+
+const leerUsuariosSeleccionados = () => {
+    const x = document.getElementsByName('userCheckbox');
+    let usuarios;
+    for (let e of x) {
+        if (e.checked === true) {
+            console.log('e ' + e.value);
+            usuarios += ';' + e.value;
+        }
+    }
+    addPlanDBCollection(usuarios);
+    document.getElementById('tablonUsuarios').classList.add('oculto--plan');
+}
+
 
 
 // Crea una IndexedDB y el objeto para almacenar planes. Una vez creada llama a una funcion y graba los planes
@@ -251,7 +345,7 @@ const leerIndexedDBOffline = () => {
 
     let tablon = document.getElementById('tablonDinamico');
 
-    document.getElementById('tablonDinamico').innerHTML = ''; // Limpia tablón
+    tablon.innerHTML = ''; // Limpia tablón
 
     request.onsuccess = event => {
 
@@ -338,17 +432,28 @@ const registrar = () => {
     let pass = document.getElementById('id_passReg').value;
     let user = document.getElementById('id_usuario').value;
 
-    firebase.auth().createUserWithEmailAndPassword(email, pass)
-        .then(() => {
-            firebase.auth().currentUser.updateProfile({
-                displayName: user
-            });
-        })
+    const datos = new Promise((resolve, reject) => {
+
+        if ((email && pass && user) !== '') {
+            resolve(
+                firebase.auth().createUserWithEmailAndPassword(email, pass)
+                    .then(() => {
+                        firebase.auth().currentUser.updateProfile({
+                            displayName: user,
+                        });
+                        addUsuario(firebase.auth().currentUser.uid, user);
+                    })
+                    .catch((error) => {
+                        console.log(error.message);
+                    }));
+        } else {
+            reject(alert('Debes introducir todos los datos'));
+        }
+    });
+
+    datos
         .then(() => {
             verificar();
-        })
-        .catch((error) => {
-            console.log(error.message);
         });
 }
 
@@ -372,6 +477,7 @@ const verificar = () => {
 
 const logout = () => {
     firebase.auth().signOut();
+    location.reload();
 }
 
 const observador = () => {
@@ -379,11 +485,23 @@ const observador = () => {
         if (user) {
             ifLogin();
             currentUser = user.displayName;
-            console.log(currentUser);
+            currentUserID = user.uid;
+
+            console.log('Hola ' + currentUser);
+
+            cargarPlanes(currentUserID);
+
+            /***** WARNING! ******/
+            // Algunas veces al registrarse no da tiempo a que la variable currentUser tome el valor y lo deja a null, recargo para 'solventarlo' momentaneamente
+            // Si se crea un plan en estas circunstancias el nombre de usuario es null si se escribe algun mensaje, recargamos para que tome valor la variable
+            // No ha sido corregido porque creia que entendia las promesas pero aun se me escapan cosas - Probar con otra logica tambien.
+            /***** WARNING! ******/
+
 
             /* Eventos que deben funcionar solo si se ha iniciado sesión */
-            document.getElementById('add').addEventListener('click', addDBCollection, false);
-            document.getElementById('enviar').addEventListener('click', addMensaje, false);
+            document.getElementById('add').addEventListener('click', listarUsuarios);
+            document.getElementById('checkBoxOK').addEventListener('click', leerUsuariosSeleccionados);
+            document.getElementById('enviar').addEventListener('click', addMensaje);
 
         } else {
             ifNoLogin();
@@ -392,7 +510,6 @@ const observador = () => {
         }
     });
 }
-
 
 
 /*  -------------------
@@ -482,7 +599,7 @@ if (localStorage.getItem('kda-mode') === 'true') {
        LISTENERS
    ------------------- */
 
-window.onload = cargarPlanes();
+
 window.onload = iniciarIndexedDB();
 window.onload = observador();
 
