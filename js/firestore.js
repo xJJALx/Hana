@@ -49,10 +49,11 @@ const isOnline = () => {
 }
 
 
-// Detecta el plan elegido y carga sus mensajes
+// Detecta el plan elegido y carga sus mensajes de Firestore
 const target = (e) => {
     let plan = e.target.id;
 
+    // Oculta el tablon con los mensajes y carga los planes
     if (plan === 'atras') atras();
 
     dbRef
@@ -67,11 +68,11 @@ const target = (e) => {
 }
 
 const limpiarInputMsg = () => {
-    document.getElementById('addMensaje').value = ""
+    document.getElementById('addMensaje').value = "";
 }
 
 
-// Crea cards en html con los planes leidos de Firestore
+// Crea cards en html con los planes leidos
 const creaCardPlanes = (planes) => {
     let tablon = document.getElementById('tablonDinamico');
     tablon.innerHTML = ''; // Limpia tablón
@@ -116,7 +117,7 @@ const cargarMensajes = (plan) => {
 }
 
 
-// Añade mensajes al plan elegido
+// Añade mensajes al plan elegido a Firestore, también llama ala funcion que graba en IndexedDB
 const addMensaje = () => {
     let f = new Date();
     let mensaje = document.getElementById('addMensaje').value;
@@ -140,7 +141,7 @@ const addMensaje = () => {
 
 
 
-
+// Añade nombre e ID a Firestore - Document(Usuarios) -> Collection(IDs) -> [0]UsuarioID(String), [1]nombre(String)
 const addUsuario = (uid, displayName) => {
     let ID = {
         usuarioID: uid,
@@ -153,7 +154,7 @@ const addUsuario = (uid, displayName) => {
         .add(ID)
 }
 
-// Añade planes a la BD Firestore
+// Añade planes a la BD Firestore y los usuarios que pueden acceder a él - Llama ala funcion que graba en la indexedDB 
 const addPlanDBCollection = (usuarios) => {
     let nombrePlan = document.getElementById('addPlanValue').value;
     addPlanesIndexedDB(nombrePlan, null)
@@ -165,6 +166,7 @@ const addPlanDBCollection = (usuarios) => {
         });
 }
 
+// Recibe un array vacio en el que graba todos los usuarios - primero el nombre de usuario y despues su ID
 const getAllUsersFirestore = (usuarios) => {
     dbRef
         .onSnapshot(snap => {
@@ -181,7 +183,7 @@ const getAllUsersFirestore = (usuarios) => {
         });
 }
 
-
+// Muestra los usuarios que hay registrados para añadirlos al plan creado
 const listarUsuarios = () => {
     let usuarios = [];
     let tablon = document.getElementById('listaUsuarios');
@@ -208,7 +210,7 @@ const listarUsuarios = () => {
         }
     }, 400);
 
-    // De esta forma no espera que se añadan los usuarios al array en el resolve()
+    // De esta forma no espera a que se añadan los usuarios al array en el resolve()
     // datos
     //     .then(() => {
     //         console.log(usuarios + ' usu' );
@@ -224,13 +226,12 @@ const listarUsuarios = () => {
     //     });
 }
 
-
+// Coge el ID de los usuarios seleccionados para añadirlos al Document(Usuarios) de cada PLAN en forma de string separado por ";"
 const leerUsuariosSeleccionados = () => {
-    const x = document.getElementsByName('userCheckbox');
+    const seleccionados = document.getElementsByName('userCheckbox');
     let usuarios;
-    for (let e of x) {
+    for (let e of seleccionados) {
         if (e.checked === true) {
-            console.log('e ' + e.value);
             usuarios += ';' + e.value;
         }
     }
@@ -238,6 +239,10 @@ const leerUsuariosSeleccionados = () => {
     document.getElementById('tablonUsuarios').classList.add('oculto--plan');
 }
 
+
+/*  -------------------
+        INDEXEDDB
+    ------------------- */
 
 
 // Crea una IndexedDB y el objeto para almacenar planes. Una vez creada llama a una funcion y graba los planes
@@ -453,7 +458,7 @@ const registrar = () => {
 
     datos
         .then(() => {
-            verificar();
+            verificarCorreo();
         });
 }
 
@@ -463,16 +468,16 @@ const login = () => {
     let pass = document.getElementById('id_passLogin').value;
 
     firebase.auth().signInWithEmailAndPassword(email, pass)
-        .then(() => { console.log('Hola'); })
+        .then(() => { console.log('Logueado'); })
         .catch((error) => { console.log(error.message); });
 }
 
-const verificar = () => {
+const verificarCorreo = () => {
     let user = firebase.auth().currentUser;
 
     user.sendEmailVerification()
         .then(() => console.log('Enviando email de verificación'))
-        .catch(() => console.log('Error verificación'));
+        .catch(() => console.log('Error de verificación'));
 }
 
 const logout = () => {
@@ -530,6 +535,7 @@ const showPanel = () => {
 
 
 const atras = () => {
+    document.getElementById('innerMsg').innerHTML = '';
     for (let i = 0; i < btn.length; i++) {
         btn[i].classList.remove('oculto--plan');
     }
@@ -537,6 +543,7 @@ const atras = () => {
     document.getElementById('chat').classList.add('oculto--plan');
     document.getElementById('atras').classList.add('oculto--plan');
     document.getElementById('tablonAdd').classList.remove('oculto--plan');
+
 }
 
 const ifLogin = () => {

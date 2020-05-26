@@ -13,7 +13,7 @@ Opciones ➜ Más herramientas ➜ Crear acceso directo
 ---
 
 ### Instalación en escritorio (móvil)
-Opciones ➜ Añadir a pantalla inicio
+Opciones ➜ Añadir a pantalla de inicio
 
 ![mobile](img/install_mobile.PNG)
 ![mobile2](img/install_mobile_name.PNG)

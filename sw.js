@@ -22,7 +22,7 @@ function limpiarCache(cacheName, numItems) {
 const APP_SHELL = [
     //'/', //Para desarrollo
     'index.html',
-    'css/index.css',
+    'css/styles.css',
     'js/app.js',
     'js/firestore.js',
     'icons/web/ajustes.svg',
@@ -78,8 +78,6 @@ self.addEventListener('activate', e => {
 
     e.waitUntil(respuesta);
 });
-
-
 
 
 self.addEventListener('fetch', e => {
