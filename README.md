@@ -1,6 +1,6 @@
 ## Proyecto final DAW
 
-Index: [HANA](https://jhonjairoal.github.io/ProyectoFinal/)
+Index: [HANA](https://jhonjairoal.github.io/ProyectoFinal/index.html)
 
 ---
 
