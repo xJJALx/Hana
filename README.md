@@ -1,10 +1,8 @@
 ## TFG DAW
 
-### PWA
+### Dieño PWA Básica 
 
-
-### V 0.1.2
-Index: [HANA](https://jhonjairoal.github.io/ProyectoFinal/index.html)
+Index: [HANA](https://jhonjairoal.github.io/ProyectoFinal/index.html) V 0.1.2
 
 ---
 
