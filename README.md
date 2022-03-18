@@ -2,7 +2,7 @@
 
 ### Diseño PWA Básica 
 
-Index: [HANA](https://jhonjairoal.github.io/ProyectoFinal/index.html) V 0.1.2
+Index: [HANA](https://xjjalx.github.io/Hana/) V 0.1.2
 
 ---
 
